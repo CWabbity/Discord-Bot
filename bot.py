@@ -7,14 +7,13 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
-filter_words = ["fuck"]
+filter_words = ["shit"]
 
 # console log when bot is ready
 @client.event
 async def on_ready():
     print(f"Bot logged in as {client.user}")
 
-# ping the bot
 @client.event
 async def on_message(msg):
     if msg.author != client.user: # to check that message wasn't from bot
@@ -33,11 +32,20 @@ async def on_message(msg):
         # create note
         if msg.content.lower().startswith("!createnote"):
             if os.path.exists("note.txt") == False:
-                f = open("note.txt","w")
+                f = open("note.txt","a")
+                f.write(msg.content.split(" ", 1)[1])
                 f.close()
-                await msg.channel.send(f"note.txt has been created {msg.author.display_name}")
+                await msg.channel.send(f"note.txt has been created and note has been saved {msg.author.display_name}")
             else:
                 await msg.channel.send(f"there is already an existing note {msg.author.display_name}")
+
+        # read note
+        if msg.content.lower().startswith("!readnote"):
+            if os.path.exists("note.txt") == True:
+                f = open("note.txt", "r")
+                await msg.channel.send(f"The note says :{f.read()}")
+            else:
+                await msg.channel.send("There is no note to read!")
 
         # delete note
         if msg.content.lower().startswith("!deletenote"):
@@ -47,6 +55,11 @@ async def on_message(msg):
             else:
                 await msg.channel.send("file does not exist, unable to delete note!")
 
+        # test command to read what I type
+        if msg.content.lower().startswith("!readtype"):
+            read_message = msg.content.split(" ", 1)[1] # remove the command in my message
+            await msg.channel.send(f"You typed '{read_message}'")
+
         # bot idle
         if msg.content.lower().startswith("!botidle"):
             await client.change_presence(status=discord.Status.idle)
@@ -54,6 +67,8 @@ async def on_message(msg):
         # bot online
         if msg.content.lower().startswith("!botonline"):
             await client.change_presence(status=discord.Status.online)
+
+        # create bot menu staus using reaction menu in discord
 
 
 
