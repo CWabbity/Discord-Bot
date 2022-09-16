@@ -1,3 +1,4 @@
+from pydoc import cli
 import config
 import discord
 import os
@@ -27,7 +28,7 @@ async def on_message(msg):
                 await msg.delete()
                 return
 
-        print("Not Deleting...")
+        print("Not Deleting Word...")
         
         # create note
         if msg.content.lower().startswith("!createnote"):
@@ -68,7 +69,42 @@ async def on_message(msg):
         if msg.content.lower().startswith("!botonline"):
             await client.change_presence(status=discord.Status.online)
 
-        # create bot menu staus using reaction menu in discord
+        # bot online status react message
+        if msg.content.lower().startswith("!botstatus"):
+            sent_message = await msg.channel.send("React to the message to switch bot online status")
+            await sent_message.add_reaction("🟢")
+            await sent_message.add_reaction("🟡")
+            await sent_message.add_reaction("🔴")
+            await sent_message.add_reaction("❌")
+            bot_message_id = sent_message.id # grab current message id from bot
+
+            # React to user reactions
+            @client.event
+            async def on_raw_reaction_add(payload): 
+                message_id = payload.message_id
+                if message_id == bot_message_id:
+                    if payload.emoji.name == "🟢":
+                        await client.change_presence(status=discord.Status.online)
+                        await sent_message.remove_reaction("🟢", payload.member)
+                        print("Online Clicked")
+                    elif payload.emoji.name == "🟡":
+                        await client.change_presence(status=discord.Status.idle)
+                        await sent_message.remove_reaction("🟡", payload.member)
+                        print("Idle CLicked")
+                    elif payload.emoji.name == "🔴":
+                        await client.change_presence(status=discord.Status.dnd)
+                        await sent_message.remove_reaction("🔴", payload.member)
+                        print("DND Clicked")
+                    elif payload.emoji.name == "❌":
+                        await sent_message.delete()
+                        await msg.delete()
+                    
+            # add remove reaction
+
+            @client.event
+            async def on_raw_reaction_remove(payload):
+                pass
+
 
 
 
