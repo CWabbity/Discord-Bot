@@ -1,4 +1,3 @@
-from pydoc import cli
 import config
 import discord
 import os
