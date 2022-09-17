@@ -25,9 +25,8 @@ async def on_message(msg):
         for text in filter_words:
             if "Moderator" not in str(msg.author.roles) and text in str(msg.content.lower()):
                 await msg.delete()
+                print("Deleted filtered word...")
                 return
-
-        print("Not Deleting Word...")
         
         # create note
         if msg.content.lower().startswith("!createnote"):
@@ -60,15 +59,7 @@ async def on_message(msg):
             read_message = msg.content.split(" ", 1)[1] # remove the command in my message
             await msg.channel.send(f"You typed '{read_message}'")
 
-        # bot idle
-        if msg.content.lower().startswith("!botidle"):
-            await client.change_presence(status=discord.Status.idle)
-
-        # bot online
-        if msg.content.lower().startswith("!botonline"):
-            await client.change_presence(status=discord.Status.online)
-
-        # bot online status react message
+        # bot online status react message (displays the message)
         if msg.content.lower().startswith("!botstatus"):
             sent_message = await msg.channel.send("React to the message to switch bot online status")
             await sent_message.add_reaction("🟢")
@@ -83,9 +74,9 @@ async def on_message(msg):
                 message_id = payload.message_id
                 if message_id == bot_message_id:
                     if payload.emoji.name == "🟢":
-                        await client.change_presence(status=discord.Status.online)
-                        await sent_message.remove_reaction("🟢", payload.member)
-                        print("Online Clicked")
+                        await client.change_presence(status=discord.Status.online) # change bot status to online
+                        await sent_message.remove_reaction("🟢", payload.member) # remove user reaction to make it look nice
+                        print("Online Clicked") # debug code
                     elif payload.emoji.name == "🟡":
                         await client.change_presence(status=discord.Status.idle)
                         await sent_message.remove_reaction("🟡", payload.member)
@@ -97,8 +88,6 @@ async def on_message(msg):
                     elif payload.emoji.name == "❌":
                         await sent_message.delete()
                         await msg.delete()
-                    
-            # add remove reaction
 
             @client.event
             async def on_raw_reaction_remove(payload):
