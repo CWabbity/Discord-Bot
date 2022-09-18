@@ -32,7 +32,7 @@ async def on_message(msg):
         if msg.content.lower().startswith("!createnote"):
             if os.path.exists("note.txt") == False:
                 f = open("note.txt","a")
-                f.write(msg.content.split(" ", 1)[1])
+                f.write(msg.content.split(" ", 1)[1]) # remove the command in my message
                 f.close()
                 await msg.channel.send(f"note.txt has been created and note has been saved {msg.author.display_name}")
             else:
@@ -54,14 +54,11 @@ async def on_message(msg):
             else:
                 await msg.channel.send("file does not exist, unable to delete note!")
 
-        # test command to read what I type
-        if msg.content.lower().startswith("!readtype"):
-            read_message = msg.content.split(" ", 1)[1] # remove the command in my message
-            await msg.channel.send(f"You typed '{read_message}'")
-
         # bot online status react message (displays the message)
         if msg.content.lower().startswith("!botstatus"):
-            sent_message = await msg.channel.send("React to the message to switch bot online status")
+            embed_bot_status = discord.Embed(title="Bot Status", description="React to the message to switch bot online status", type="rich", color=0x00ff00)
+            embed_bot_status.add_field(name="How to use", value="🟢 = Online\n🟡 = Idle\n🔴 = Do not disturb\n❌ = Close this prompt", inline=False)
+            sent_message = await msg.channel.send(embed=embed_bot_status)
             await sent_message.add_reaction("🟢")
             await sent_message.add_reaction("🟡")
             await sent_message.add_reaction("🔴")
@@ -93,7 +90,7 @@ async def on_message(msg):
             async def on_raw_reaction_remove(payload):
                 pass
 
-
-
+            # add feature to delete the prompt(like the bot status mesage) itself after 30 seconds
+            # optimize note taking feature using mongodb?
 
 client.run(config.token)
