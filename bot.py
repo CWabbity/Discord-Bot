@@ -110,6 +110,8 @@ async def on_message(msg):
         # List all commands available currently for the bot
         if msg.content.lower().startswith("!help"):
             embed_command_list = discord.Embed(title="Command List", description="Displays all the current commands coded into the bot", color=0x00ff00)
+            file_image = discord.File("image.jpg", filename="image.jpg")
+            embed_command_list.set_image(url="attachment://image.jpg")
             embed_command_list.add_field(name="!help", value="Displays this message", inline=False)
             embed_command_list.add_field(name="!ping", value="Pings the bot", inline=False)
             embed_command_list.add_field(name="!createnote", value="Creates a note with your content", inline=False)
@@ -118,7 +120,7 @@ async def on_message(msg):
             embed_command_list.add_field(name="!botstatus", value="Change bot online status", inline=False)
             embed_command_list.add_field(name="!purge", value="Deletes 100 messages in text channel", inline=False)
             embed_command_list.add_field(name="!typing", value="Debugging command", inline=False)
-            await msg.channel.send(embed=embed_command_list)
+            await msg.channel.send(embed=embed_command_list, file=file_image)
         # optimize note taking feature using mongodb?
 
 client.run(config.token)
