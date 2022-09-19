@@ -121,6 +121,7 @@ async def on_message(msg):
             embed_command_list.add_field(name="!purge", value="Deletes 100 messages in text channel", inline=False)
             embed_command_list.add_field(name="!typing", value="Debugging command", inline=False)
             await msg.channel.send(embed=embed_command_list, file=file_image)
+            
         # optimize note taking feature using mongodb?
 
 client.run(config.token)
