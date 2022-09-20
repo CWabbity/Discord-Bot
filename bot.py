@@ -8,7 +8,7 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
-filter_words = ["shit"]
+filter_words = ["shit", "fuck"]
 
 # console log when bot is ready
 @client.event
@@ -97,7 +97,7 @@ async def on_message(msg):
         # purge/deletes all chat in text channel
         if msg.content.lower().startswith("!purge"):
             async with msg.channel.typing():
-                purged_messages = await msg.channel.purge(limit=100)
+                purged_messages = await msg.channel.purge(limit=50)
                 await msg.channel.send(f"Deleted {len(purged_messages)} message(s)")
 
         # bot typing feature
@@ -118,10 +118,11 @@ async def on_message(msg):
             embed_command_list.add_field(name="!readnote", value="Reads the current note if available", inline=False)
             embed_command_list.add_field(name="!deletenote", value="Deletes the note", inline=False)
             embed_command_list.add_field(name="!botstatus", value="Change bot online status", inline=False)
-            embed_command_list.add_field(name="!purge", value="Deletes 100 messages in text channel", inline=False)
+            embed_command_list.add_field(name="!purge", value="Deletes 50 messages in text channel", inline=False)
             embed_command_list.add_field(name="!typing", value="Debugging command", inline=False)
             await msg.channel.send(embed=embed_command_list, file=file_image)
             
         # optimize note taking feature using mongodb?
+        # add music function
 
 client.run(config.token)
